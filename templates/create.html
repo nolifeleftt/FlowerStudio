@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+<title>Добавление товара</title>
+{% endblock %}
+{% block body %}
+
+<div class="container">
+    <h1 class="text-center">Добавление нового товара</h1>
+    <form method="post">
+        <input type="text" class="form-control" name="title" id="title" placeholder="Название"><br>
+        <input type="number" class="form-control" name="price" id="price" placeholder="Цена"><br>
+        <input type="text" class="form-control" name="description" id="description" placeholder="Описание">
+        <br>
+        <input type="text" class="form-control" name="image" id="image" placeholder="Ссылка на изображение"><br>
+        <center>
+            <button class="btn btn-success" type="submit">Добавить товар</button>
+            <a href="{{ url_for('delete_all_items') }}" class="btn btn-danger">Удалить все товары</a>
+        </center>
+    </form>
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Название</th>
+                <th scope="col">Цена</th>
+                <th scope="col">Описание</th>
+                <th scope="col">Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <th scope="row">{{ item.id }}</th>
+                <td>{{ item.title }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.description }}</td>
+                <td>
+                    {% if item.isActive %}
+                    <form method="post" action="{{ url_for('deactivate', item_id=item.id) }}">
+                        <button class="btn btn-danger" type="submit">Убрать из каталога</button>
+                    </form>
+                    {% else %}
+                    <form method="post" action="{{ url_for('activate', item_id=item.id) }}">
+                        <button class="btn btn-success" type="submit">Вернуть в каталог</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+

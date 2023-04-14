@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Корзина</title>
+{% endblock %}
+
+{% block body %}
+  <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+    <h1 class="display-4 fw-normal">Корзина</h1>
+  </div>
+  <div class="container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Наименование</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in data %}
+        {% if item.quantity %}
+          <tr>
+            <th scope="row"> <img src="{{ item.image }}" class="img-responsive img-thumbnail mx-auto d-block"></th>
+            <td>{{ item.title }}</td>
+            <td>{{ item.price }} &#10005; {{ item.quantity }} = {{ item.price * item.quantity }} руб.</td>
+            <td>
+              <form method="post" action="{{ url_for('remove_from_cart', item_id=item.id) }}">
+                <button class="btn btn-light btn-sm" type="submit">&#10008;</button>
+              </form>
+            </td>
+          </tr>
+        {% endif %}
+        {% endfor %}
+        <tr>
+  <td colspan="3" class="border-0 text-end"><strong>Итого: {{ total }} руб.</strong></td>
+</tr>
+<tr>
+  </td>
+</tr>
+      </tbody>
+    </table>
+    </div>
+<style>
+.btn-full-width {
+  display: block;
+  width: 100%;
+  height: 40px; /* установите желаемую высоту кнопки */
+  line-height: 30px; /* установите желаемую высоту строки внутри кнопки */
+  margin: 10;
+  padding: 0;
+  border: none;
+  text-align: center;
+}
+.btn-margin {
+  margin-top: 20px;
+}
+</style>
+
+<form method="post" action="/order">
+  <button type="submit" class="btn btn-primary btn-lg btn-full-width">Оформить заказ</button>
+</form>
+<form method="post" action="/cart/reset_quantity">
+  <button type="submit" class="btn btn-dark btn-lg btn-full-width btn-margin">Очистить корзину</button>
+</form>
+
+{% endblock %}
