@@ -4,6 +4,7 @@
 
 <title>Добавление товара</title>
 {% endblock %}
+
 {% block body %}
 
 <div class="container">
@@ -34,24 +35,43 @@
             {% for item in items %}
             <tr>
                 <th scope="row">{{ item.id }}</th>
+                {% if item.isEditing %}
+                <td><input type="text" class="form-control" name="title" value="{{ item.title }}"></td>
+                <td><input type="number" class="form-control" name="price" value="{{ item.price }}"></td>
+                <td><input type="text" class="form-control" name="description" value="{{ item.description }}"></td>
+                <td>
+                    <form method="post" action="{{ url_for('save_item', item_id=item.id) }}">
+                        <button class="btn btn-success btn-save" type="submit">Сохранить</button>
+                    </form>
+                </td>
+                {% else %}
                 <td>{{ item.title }}</td>
                 <td>{{ item.price }}</td>
                 <td>{{ item.description }}</td>
                 <td>
                     {% if item.isActive %}
                     <form method="post" action="{{ url_for('deactivate', item_id=item.id) }}">
-                        <button class="btn btn-danger" type="submit">Убрать из каталога</button>
+                        <button class="btn btn-secondary btn-action" type="submit">Убрать из каталога</button>
                     </form>
                     {% else %}
                     <form method="post" action="{{ url_for('activate', item_id=item.id) }}">
-                        <button class="btn btn-success" type="submit">Вернуть в каталог</button>
+                        <button class="btn btn-success btn-action" type="submit">Вернуть в каталог</button>
                     </form>
                     {% endif %}
+                    <button class="btn btn-primary btn-edit" data-item-id="{{ item.id }}">Редактировать</button>
+                    <form method="post" action="{{ url_for('delete_item', item_id=item.id) }}">
+                        <button class="btn btn-danger" type="submit">Удалить товар</button>
+                    </form>
                 </td>
+                {% endif %}
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+<style>
+.btn-action {
+    margin-top: 10px;
+}
+</style>
 {% endblock %}
-

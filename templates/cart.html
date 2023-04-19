@@ -24,20 +24,23 @@
             <th scope="row"> <img src="{{ item.image }}" class="img-responsive img-thumbnail mx-auto d-block"></th>
             <td>{{ item.title }}</td>
             <td>{{ item.price }} &#10005; {{ item.quantity }} = {{ item.price * item.quantity }} руб.</td>
-            <td>
-              <form method="post" action="{{ url_for('remove_from_cart', item_id=item.id) }}">
-                <button class="btn btn-light btn-sm" type="submit">&#10008;</button>
+            <td class="btn-group" style="text-align: center;">
+              <form method="post" action="{{ url_for('decrease_quantity', item_id=item.id) }}">
+                <button class="btn btn-sm btn-light minus-btn">&minus;</button>
+              </form>
+              <form method="post" action="{{ url_for('increase_quantity', item_id=item.id) }}">
+                <button class="btn btn-sm btn-light plus-btn">+</button>
               </form>
             </td>
+
           </tr>
         {% endif %}
         {% endfor %}
         <tr>
-  <td colspan="3" class="border-0 text-end"><strong>Итого: {{ total }} руб.</strong></td>
-</tr>
-<tr>
-  </td>
-</tr>
+          <td colspan="3" class="border-0 text-end"><strong>Итого: {{ total }} руб.</strong></td>
+        </tr>
+        <tr>
+        </tr>
       </tbody>
     </table>
     </div>
@@ -45,8 +48,8 @@
 .btn-full-width {
   display: block;
   width: 100%;
-  height: 40px; /* установите желаемую высоту кнопки */
-  line-height: 30px; /* установите желаемую высоту строки внутри кнопки */
+  height: 40px;
+  line-height: 30px;
   margin: 10;
   padding: 0;
   border: none;
@@ -54,6 +57,28 @@
 }
 .btn-margin {
   margin-top: 20px;
+}
+
+.btn-group {
+  border: none;
+  margin-top: 30px;
+}
+
+.btn-group button {
+  width: 20px;
+  height: 30px;
+  margin-right: 5px;
+  margin-left: 5px;
+  padding: 0;
+  border: none;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.img-thumbnail {
+  width: 400px;
+  height: 80px;
+  object-fit: cover;
 }
 </style>
 
