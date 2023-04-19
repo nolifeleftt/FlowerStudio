@@ -43,6 +43,25 @@ class Cart(db.Model):
     def total_price(self):
         return Item.query.get(self.item_id).price * self.quantity
 
+    @classmethod
+    def decrease_quantity(cls, item_id):
+        cart_item = cls.query.filter_by(item_id=item_id).first()
+        if cart_item and cart_item.quantity > 1:
+            cart_item.quantity -= 1
+            db.session.commit()
+        elif cart_item and cart_item.quantity == 1:
+            db.session.delete(cart_item)
+            db.session.commit()
+
+    @classmethod
+    def increase_quantity(cls, item_id):
+        cart_item = cls.query.filter_by(item_id=item_id).first()
+        if cart_item:
+            cart_item.quantity += 1
+        else:
+            cart_item = cls(item_id=item_id)
+            db.session.add(cart_item)
+        db.session.commit()
 @app.route('/')
 def index():
     items = Item.query.order_by(Item.price).all()
@@ -94,12 +113,33 @@ def add_to_cart(item_id):
     else:
         return redirect('/')
 
+@app.route('/cart/decrease_quantity/<item_id>', methods=['POST'])
+def decrease_quantity(item_id):
+    Cart.decrease_quantity(item_id)
+    return redirect(url_for('cart'))
+
+
+@app.route('/cart/increase_quantity/<item_id>', methods=['POST'])
+def increase_quantity(item_id):
+    Cart.increase_quantity(item_id)
+    return redirect(url_for('cart'))
+
 @app.route('/delete_all_items', methods=['GET', 'POST'])
 def delete_all_items():
     db.session.query(Item).delete()
     db.session.commit()
     return redirect('/create')
 
+@app.route('/delete_item/<int:item_id>', methods=['POST'])
+def delete_item(item_id):
+    item = Item.query.filter_by(id=item_id).first()
+    if item:
+        db.session.delete(item)
+        db.session.commit()
+        flash('Товар удален успешно!', 'success')
+    else:
+        flash('Товар не найден', 'error')
+    return redirect(url_for('create'))
 @app.route('/cart')
 def cart():
     cart_items = []
@@ -115,7 +155,6 @@ def cart():
                     'quantity': cart_item.quantity,
                     'image': item.image,
                 })
-    print('cart itms', cart_items)
     total = sum(item['price'] * item['quantity'] for item in cart_items)
     return render_template('cart.html', data=cart_items, total=total)
 
