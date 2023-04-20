@@ -22,8 +22,8 @@
         {% if item.quantity %}
           <tr>
             <th scope="row"> <img src="{{ item.image }}" class="img-responsive img-thumbnail mx-auto d-block"></th>
-            <td>{{ item.title }}</td>
-            <td>{{ item.price }} &#10005; {{ item.quantity }} = {{ item.price * item.quantity }} руб.</td>
+            <td>{{ item.title }}, {{ item.quantity }} шт.</td>
+            <td>{{ item.price * item.quantity }} руб.</td>
             <td class="btn-group" style="text-align: center;">
               <form method="post" action="{{ url_for('decrease_quantity', item_id=item.id) }}">
                 <button class="btn btn-sm btn-light minus-btn">&minus;</button>
@@ -52,7 +52,6 @@
   line-height: 30px;
   margin: 10;
   padding: 0;
-  border: none;
   text-align: center;
 }
 .btn-margin {
@@ -83,10 +82,10 @@
 </style>
 
 <form method="post" action="/order">
-  <button type="submit" class="btn btn-primary btn-lg btn-full-width">Оформить заказ</button>
+  <button type="submit" class="btn btn-outline-success btn-lg btn-full-width">Оформить заказ</button>
 </form>
 <form method="post" action="/cart/reset_quantity">
-  <button type="submit" class="btn btn-dark btn-lg btn-full-width btn-margin">Очистить корзину</button>
+  <button type="submit" class="btn btn-outline-danger btn-lg btn-full-width btn-margin">Очистить корзину</button>
 </form>
 
 {% endblock %}
